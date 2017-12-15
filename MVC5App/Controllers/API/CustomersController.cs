@@ -3,6 +3,7 @@ using MVC5App.DTOs;
 using MVC5App.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -20,6 +21,7 @@ namespace MVC5App.Controllers.API
         //Get Customer
         [HttpGet]
         public IHttpActionResult GetCustomers()
+        {
             var customerDTO = _context.Customers.Include(m => m.MemberShipType).ToList().Select(Mapper.Map<Customer, CustomerDTO>);
             return Ok(customerDTO);
         }
