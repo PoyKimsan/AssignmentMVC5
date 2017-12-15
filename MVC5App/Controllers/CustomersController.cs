@@ -23,9 +23,7 @@ namespace MVC5App.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            //var customers = Getcustomers();
-            var customers = _context.Customers.Include(c => c.MemberShipType).ToList();
-            return View(customers);
+            return View();
         }
         public ActionResult Details(int id) {
             //var customers = Getcustomers().SingleOrDefault(c => c.Id == id);

@@ -17,6 +17,7 @@ namespace MVC5App.DTOs
         public bool IsSubscribedToNewsletter { get; set; }
         [Min18YearsIfAMember]
         public DateTime? DateOfBirth { get; set; }
+        public MemberShipTypeDTO memberShipType { get; set; }
         public byte MemberShipTypeId { get; set; }
     }
 }

@@ -18,20 +18,25 @@ namespace MVC5App.Controllers.API
             _context = new ApplicationDbContext();
         }
         //Get Customer
-        public IEnumerable<CustomerDTO> GetCustomers() {
-            return _context.Customers.ToList().Select(Mapper.Map<Customer, CustomerDTO>);
+        [HttpGet]
+        public IHttpActionResult GetCustomers()
+            var customerDTO = _context.Customers.Include(m => m.MemberShipType).ToList().Select(Mapper.Map<Customer, CustomerDTO>);
+            return Ok(customerDTO);
         }
         //Get Customer/1
-        public CustomerDTO GetCustomer(int id) {
+        [HttpGet]
+        public IHttpActionResult GetCustomer(int id)
+        {
             var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
 
             if (customer == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-            return Mapper.Map<Customer, CustomerDTO>(customer);
+            return Ok(Mapper.Map<Customer, CustomerDTO>(customer));
         }
         //Post Customer
         [HttpPost]
-        public CustomerDTO CreateCustomer(CustomerDTO customerDTO) {
+        public CustomerDTO CreateCustomer(CustomerDTO customerDTO)
+        {
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             var customer = Mapper.Map<CustomerDTO, Customer>(customerDTO);
@@ -42,7 +47,8 @@ namespace MVC5App.Controllers.API
         }
 
         [HttpPut]
-        public void UpdateCustomer(int id, CustomerDTO customerDto) {
+        public void UpdateCustomer(int id, CustomerDTO customerDto)
+        {
             if (!ModelState.IsValid)
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             var customerInDB = _context.Customers.SingleOrDefault(c => c.Id == id);
@@ -50,10 +56,11 @@ namespace MVC5App.Controllers.API
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             Mapper.Map(customerDto, customerInDB);
             _context.SaveChanges();
-        } 
+        }
 
         [HttpDelete]
-        public void DeleteCustomer(int id) {
+        public void DeleteCustomer(int id)
+        {
             var customerInDB = _context.Customers.SingleOrDefault(c => c.Id == id);
             if (customerInDB == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);

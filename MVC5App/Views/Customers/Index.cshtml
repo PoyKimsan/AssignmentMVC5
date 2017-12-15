@@ -5,34 +5,43 @@
 }
 
 <h2>Customer</h2> @Html.ActionLink("Add New Customer","AddNew","Customers", new { @class = "btn btn-primary" })
-@if (Model.Any())
-{
-	<table width="100%" id="customer">
+<br /> <br />
+<table width="100%" id="customer" class="table table-bordered table-hover">
+	<thead>
 		<tr>
-			<th>Id</th>
 			<th>Customer Name</th>
 			<th>MemberShip</th>
-			<th>Discount Rate</th>
 			<th>Action</th>
 		</tr>
-		@foreach (var customer in Model) {
-			<tr>
-				<td>@customer.Id</td>
-				<td>@Html.ActionLink(customer.Name, "Details", new { id = customer.Id }, null)</td>
-				<td>@customer.MemberShipType.Name</td>
-				<td>@customer.MemberShipType.DiscountRate%</td>
-				<td>@Html.ActionLink("Edit","Edit",new {id=customer.Id }, null)
-					<button data-customer-id="@customer.Id" class="btn-link js-delete" >Delete</button>
-				</td>
-			</tr>
-		}
-	</table>
-}
+	</thead>
+</table>
 @section Scripts{
 	<script>
 		$(document).ready(function () {
-
-			$("#customer").DataTable();
+			$("#customer").DataTable({
+				ajax: {
+					url: "/api/Customers",
+					dataSrc: ""
+				},
+				columns: [
+					{
+						data: "name",
+						// render link
+						render: function (data, type, customer) {
+							return "<a href='/customers/edit/" + customer.id + "'>" + customer.name + "</a>"
+						}
+					},
+					{
+						data: "memberShipType.name"
+					},
+					{
+						data: "id",
+						render: function (data) {
+							return "<button class='btn-link js-delete' data-customer-id="+ data + ">Delete</button>"
+						}
+					}
+				]
+			});
 			$("#customer").on("click",".js-delete", function () {
 				var button = $(this);
 
